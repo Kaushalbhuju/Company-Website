@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<!-- Project Hero -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+                    </ol>
+                </nav>
+                <h1 class="display-5 fw-bold mb-4">{{ project.title }}</h1>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    {% if project.category %}
+                    <span class="badge bg-primary">{{ project.category.name }}</span>
+                    {% endif %}
+                    {% for tech in project.tech_list %}
+                    <span class="badge bg-secondary">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+                <p class="lead">{{ project.short_description }}</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="pe-lg-4">
+                    <div class="mb-5">
+                        <h2 class="fw-bold mb-4">Project Overview</h2>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light p-3 h-100">
+                                    <h6 class="text-muted mb-2">Client</h6>
+                                    <p class="mb-0 fw-bold">{{ project.client }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light p-3 h-100">
+                                    <h6 class="text-muted mb-2">Duration</h6>
+                                    <p class="mb-0 fw-bold">{{ project.start_date|date:"M Y" }} - {{ project.end_date|date:"M Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">The Challenge</h3>
+                        <div class="content">
+                            {{ project.challenge|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">Our Solution</h3>
+                        <div class="content">
+                            {{ project.solution|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">The Results</h3>
+                        <div class="content">
+                            {{ project.result|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    {% if project.images.all %}
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">Project Gallery</h3>
+                        <div class="row g-3">
+                            {% for image in project.images.all %}
+                            <div class="col-md-6">
+                                <img src="{{ image.image.url }}" class="img-fluid rounded" alt="{{ image.caption|default:project.title }}">
+                                {% if image.caption %}
+                                <p class="text-muted mt-2">{{ image.caption }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4">Project Details</h4>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <h6 class="text-muted mb-1">Client</h6>
+                                <p class="mb-0">{{ project.client }}</p>
+                            </li>
+                            <li class="mb-3">
+                                <h6 class="text-muted mb-1">Category</h6>
+                                <p class="mb-0">
+                                    {% if project.category %}
+                                    {{ project.category.name }}
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </p>
+                            </li>
+                            <li class="mb-3">
+                                <h6 class="text-muted mb-1">Technologies</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for tech in project.tech_list %}
+                                    <span class="badge bg-secondary">{{ tech }}</span>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                            <li class="mb-3">
+                                <h6 class="text-muted mb-1">Duration</h6>
+                                <p class="mb-0">{{ project.start_date|date:"M Y" }} - {{ project.end_date|date:"M Y" }}</p>
+                            </li>
+                            {% if project.website %}
+                            <li class="mb-3">
+                                <h6 class="text-muted mb-1">Website</h6>
+                                <a href="{{ project.website }}" target="_blank" class="text-primary">{{ project.website }}</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <a href="{% url 'contacts:contact' %}?project={{ project.title }}" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i> Similar Project Inquiry
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Projects -->
+{% if related_projects %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Related Projects</h2>
+            <p class="text-muted">Other projects you might be interested in</p>
+        </div>
+        <div class="row g-4">
+            {% for related in related_projects %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="{{ related.featured_image.url }}" class="card-img-top" alt="{{ related.title }}">
+                    <div class="card-body">
+                        {% if related.category %}
+                        <span class="badge bg-primary mb-2">{{ related.category.name }}</span>
+                        {% endif %}
+                        <h5 class="card-title">{{ related.title }}</h5>
+                        <p class="card-text">{{ related.short_description }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'projects:detail' related.slug %}" class="btn btn-sm btn-outline-primary">View Case Study</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">Need a similar solution?</h3>
+                <p class="mb-lg-0">Contact us to discuss how we can implement a similar solution for your business.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'contacts:contact' %}?project={{ project.title }}" class="btn btn-light btn-lg px-4">Get a Quote</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

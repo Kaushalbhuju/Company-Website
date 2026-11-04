@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Innovative IT Solutions for Your Business</h1>
+                <p class="lead mb-4">We deliver cutting-edge technology solutions to help your business grow and succeed in the digital world.</p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'services:list' %}" class="btn btn-light btn-lg px-4">Our Services</a>
+                    <a href="{% url 'contacts:contact' %}" class="btn btn-outline-light btn-lg px-4">Contact Us</a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{% static 'images/hero-image.png' %}" alt="Hero Image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Our Services</h2>
+            <p class="text-muted">We offer a wide range of professional IT services</p>
+        </div>
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-box bg-light-primary text-primary rounded-circle mx-auto mb-4">
+                            <i class="{{ service.icon }} fa-2x"></i>
+                        </div>
+                        <h5 class="card-title">{{ service.title }}</h5>
+                        <p class="card-text">{{ service.description }}</p>
+                        <a href="{% url 'services:detail' service.id %}" class="btn btn-sm btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'services:list' %}" class="btn btn-primary">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Featured Projects</h2>
+            <p class="text-muted">Some of our recent successful projects</p>
+        </div>
+        <div class="row g-4">
+            {% for project in featured_projects %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <img src="{{ project.featured_image.url }}" class="card-img-top" alt="{{ project.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text text-muted">{{ project.description|truncatewords:15 }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'projects:detail' project.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'projects:list' %}" class="btn btn-primary">View All Projects</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">What Our Clients Say</h2>
+            <p class="text-muted">Don't just take our word for it</p>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="owl-carousel owl-theme">
+                    {% for testimonial in testimonials %}
+                    <div class="item">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="d-flex mb-3">
+                                    {% if testimonial.avatar %}
+                                    <img src="{{ testimonial.avatar.url }}" class="rounded-circle me-3" width="60" height="60" alt="{{ testimonial.client_name }}">
+                                    {% else %}
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                                        <i class="fas fa-user fa-2x text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ testimonial.client_name }}</h6>
+                                        <small class="text-muted">{{ testimonial.position }}, {{ testimonial.company }}</small>
+                                    </div>
+                                </div>
+                                <p class="mb-0">"{{ testimonial.content }}"</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Our Team</h2>
+            <p class="text-muted">Meet our team of experts</p>
+        </div>
+        <div class="row g-4">
+            {% for member in team_members %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 text-center">
+                    <img src="{{ member.photo.url }}" class="card-img-top rounded-circle mx-auto mt-3" style="width: 150px; height: 150px; object-fit: cover;" alt="{{ member.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ member.name }}</h5>
+                        <p class="card-text text-primary">{{ member.position }}</p>
+                        <p class="card-text text-muted">{{ member.bio|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            {% if member.linkedin %}
+                            <a href="{{ member.linkedin }}" class="text-dark"><i class="fab fa-linkedin-in"></i></a>
+                            {% endif %}
+                            {% if member.twitter %}
+                            <a href="{{ member.twitter }}" class="text-dark"><i class="fab fa-twitter"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'about' %}" class="btn btn-primary">Meet Full Team</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">Ready to start your project?</h3>
+                <p class="mb-lg-0">Get in touch with our team to discuss your requirements and how we can help.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'contacts:contact' %}" class="btn btn-light btn-lg px-4">Get a Free Quote</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

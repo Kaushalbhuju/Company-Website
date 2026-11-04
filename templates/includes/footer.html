@@ -1,0 +1,76 @@
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5>About Us</h5>
+                {% if company %}
+                <p>{{ company.about|truncatewords:30 }}</p>
+                {% else %}
+                <p>Leading IT solutions provider specializing in custom software development, web applications, and digital transformation services.</p>
+                {% endif %}
+            </div>
+            <div class="col-md-2 mb-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
+                    <li><a href="{% url 'about' %}" class="text-white">About</a></li>
+                    <li><a href="{% url 'services:list' %}" class="text-white">Services</a></li>
+                    <li><a href="{% url 'projects:list' %}" class="text-white">Projects</a></li>
+                    <li><a href="{% url 'blog:list' %}" class="text-white">Blog</a></li>
+                    <li><a href="{% url 'contacts:contact' %}" class="text-white">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Services</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white">Web Development</a></li>
+                    <li><a href="#" class="text-white">Mobile Apps</a></li>
+                    <li><a href="#" class="text-white">Cloud Solutions</a></li>
+                    <li><a href="#" class="text-white">UI/UX Design</a></li>
+                    <li><a href="#" class="text-white">Digital Marketing</a></li>
+                    <li><a href="#" class="text-white">IT Consulting</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Contact Info</h5>
+                <ul class="list-unstyled">
+                    {% if company %}
+                    <li><i class="fas fa-map-marker-alt me-2"></i> {{ company.address }}</li>
+                    <li><i class="fas fa-phone me-2"></i> {{ company.phone }}</li>
+                    <li><i class="fas fa-envelope me-2"></i> {{ company.email }}</li>
+                    {% else %}
+                    <li><i class="fas fa-map-marker-alt me-2"></i> Shrijananagar-05, Bhaktapur, Nepal</li>
+                    <li><i class="fas fa-phone me-2"></i> 01-5924949</li>
+                    <li><i class="fas fa-envelope me-2"></i> nmsmultipurpose@gmail.com</li>
+                    {% endif %}
+                </ul>
+                <div class="mt-3">
+                    {% if company and company.facebook %}
+                    <a href="{{ company.facebook }}" class="text-white me-2"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    {% endif %}
+                    {% if company and company.twitter %}
+                    <a href="{{ company.twitter }}" class="text-white me-2"><i class="fab fa-twitter fa-lg"></i></a>
+                    {% endif %}
+                    {% if company and company.linkedin %}
+                    <a href="{{ company.linkedin }}" class="text-white me-2"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                    {% endif %}
+                    {% if company and company.instagram %}
+                    <a href="{{ company.instagram }}" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr class="my-4 bg-light">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0">&copy; {% now "Y" %} {% if company %}{{ company.name }}{% else %}Neon Multipurpose Solution{% endif %}. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <p class="mb-0">
+                    <a href="#" class="text-white me-3">Privacy Policy</a>
+                    <a href="#" class="text-white">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ job.title }}{% endblock %}
+
+{% block content %}
+<!-- Job Hero -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'careers:list' %}">Careers</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ job.title }}</li>
+                    </ol>
+                </nav>
+                <h1 class="display-5 fw-bold mb-4">{{ job.title }}</h1>
+                <div class="d-flex flex-wrap gap-3 mb-3">
+                    {% if job.category %}
+                    <span class="badge bg-primary">{{ job.category.name }}</span>
+                    {% endif %}
+                    <span class="badge bg-secondary">{{ job.job_type.name }}</span>
+                    <span class="badge bg-info">{{ job.location }}</span>
+                </div>
+                <p class="lead">Posted on {{ job.published_at|date:"M d, Y" }}</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h5 class="fw-bold mb-3">Quick Info</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="icon-box bg-light-primary text-primary rounded-circle me-3">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Job Type</h6>
+                                    <p class="mb-0">{{ job.job_type.name }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="icon-box bg-light-primary text-primary rounded-circle me-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Location</h6>
+                                    <p class="mb-0">{{ job.location }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="icon-box bg-light-primary text-primary rounded-circle me-3">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Posted</h6>
+                                    <p class="mb-0">{{ job.published_at|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        {% if job.application_deadline %}
+                        <li>
+                            <div class="d-flex">
+                                <div class="icon-box bg-light-primary text-primary rounded-circle me-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Deadline</h6>
+                                    <p class="mb-0">{{ job.application_deadline|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <a href="#apply" class="btn btn-primary w-100 mt-3">Apply Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Job Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="pe-lg-4">
+                    <div class="mb-5">
+                        <h2 class="fw-bold mb-4">Job Description</h2>
+                        <div class="content">
+                            {{ job.description|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">Responsibilities</h3>
+                        <div class="content">
+                            {{ job.responsibilities|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="fw-bold mb-4">Requirements</h3>
+                        <div class="content">
+                            {{ job.requirements|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4">Share This Job</h4>
+                        <div class="d-flex gap-3 mb-4">
+                            <a href="#" class="icon-box bg-light-primary text-primary rounded-circle">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="icon-box bg-light-primary text-primary rounded-circle">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="icon-box bg-light-primary text-primary rounded-circle">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="icon-box bg-light-primary text-primary rounded-circle">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                        
+                        <h4 class="fw-bold mb-4">Similar Jobs</h4>
+                        <ul class="list-unstyled">
+                            {% for similar_job in similar_jobs %}
+                            <li class="mb-3">
+                                <a href="{% url 'careers:detail' similar_job.slug %}" class="d-flex text-dark">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">{{ similar_job.title }}</h6>
+                                        <small class="text-muted">{{ similar_job.location }} • {{ similar_job.job_type.name }}</small>
+                                    </div>
+                                    <div class="flex-shrink-0 ms-3">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Application Form -->
+<section id="apply" class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="fw-bold mb-4">Apply for this Position</h2>
+                        {% if job.application_deadline and job.application_deadline < timezone.now.date %}
+                        <div class="alert alert-warning">
+                            <h4 class="alert-heading">Application Closed</h4>
+                            <p>The application deadline for this position was {{ job.application_deadline|date:"M d, Y" }}.</p>
+                        </div>
+                        {% else %}
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Submit Application</button>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

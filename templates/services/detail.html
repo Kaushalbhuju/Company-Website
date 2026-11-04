@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ service.title }} | {{ block.super }}{% endblock %}
+
+{% block content %}
+<!-- Service Hero Section -->
+<section class="service-hero bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'services:list' %}">Services</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ service.title }}</li>
+                    </ol>
+                </nav>
+                <h1 class="display-5 fw-bold mb-3">{{ service.title }}</h1>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge bg-primary">{{ service.category }}</span>
+                    {% if service.price %}
+                    <span class="badge bg-success">From ${{ service.price }}</span>
+                    {% endif %}
+                    {% if service.is_featured %}
+                    <span class="badge bg-warning text-dark">Featured</span>
+                    {% endif %}
+                </div>
+                <p class="lead">{{ service.short_description }}</p>
+            </div>
+            <div class="col-lg-6">
+                {% if service.image %}
+                <img src="{{ service.image.url }}" alt="{{ service.title }}" class="img-fluid rounded shadow">
+                {% else %}
+                <img src="{% static 'images/service-default.jpg' %}" alt="{{ service.title }}" class="img-fluid rounded shadow">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Service Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="service-content mb-5">
+                    <div class="service-description mb-5">
+                        <h2 class="mb-4">Service Overview</h2>
+                        {{ service.description|linebreaks }}
+                    </div>
+
+                    {% if service.features.all %}
+                    <div class="service-features mb-5">
+                        <h2 class="mb-4">Key Features</h2>
+                        <div class="row g-4">
+                            {% for feature in service.features.all %}
+                            <div class="col-md-6">
+                                <div class="feature-card p-4 h-100 border rounded">
+                                    <div class="feature-icon mb-3 text-primary">
+                                        <i class="{{ feature.icon|default:'fas fa-check-circle' }} fa-2x"></i>
+                                    </div>
+                                    <h3 class="h5">{{ feature.title }}</h3>
+                                    <p class="mb-0">{{ feature.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if service.process.all %}
+                    <div class="service-process mb-5">
+                        <h2 class="mb-4">Our Process</h2>
+                        <div class="timeline">
+                            {% for step in service.process.all %}
+                            <div class="timeline-item {% if forloop.counter|divisibleby:2 %}timeline-item-right{% else %}timeline-item-left{% endif %}">
+                                <div class="timeline-content p-4 rounded shadow-sm">
+                                    <div class="timeline-number">{{ forloop.counter }}</div>
+                                    <h3 class="h5">{{ step.title }}</h3>
+                                    <p>{{ step.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="service-sidebar">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="h5 card-title mb-3">Service Details</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Category:</span>
+                                    <span class="text-end">{{ service.category }}</span>
+                                </li>
+                                {% if service.price %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Starting Price:</span>
+                                    <span class="text-end">${{ service.price }}</span>
+                                </li>
+                                {% endif %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Delivery Time:</span>
+                                    <span class="text-end">{{ service.delivery_time|default:"Varies by project" }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h3 class="h5 card-title mb-3">Get This Service</h3>
+                            <p class="card-text">Ready to get started with our {{ service.title }} service?</p>
+                            <a href="{% url 'contacts:contact' %}?service={{ service.slug }}" class="btn btn-primary w-100 mb-2">
+                                <i class="fas fa-envelope me-2"></i> Request a Quote
+                            </a>
+                            <a href="{% url 'services:list' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-arrow-left me-2"></i> All Services
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Services -->
+{% if related_services %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Related Services</h2>
+        <div class="row g-4">
+            {% for service in related_services %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="h5 card-title">{{ service.title }}</h3>
+                        <p class="card-text">{{ service.short_description|truncatewords:20 }}</p>
+                        <a href="{% url 'services:detail' service.slug %}" class="btn btn-sm btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .service-hero {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .feature-card {
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 50px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    
+    .timeline-number {
+        position: absolute;
+        left: -70px;
+        top: 0;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        background: #0d6efd;
+        color: white;
+        border-radius: 50%;
+        font-weight: bold;
+    }
+    
+    .timeline-content {
+        position: relative;
+        background: white;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animation for timeline items
+    document.addEventListener('DOMContentLoaded', function() {
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateX(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        timelineItems.forEach((item, index) => {
+            item.style.opacity = 0;
+            item.style.transition = 'all 0.5s ease ' + (index * 0.1) + 's';
+            if (item.classList.contains('timeline-item-left')) {
+                item.style.transform = 'translateX(-50px)';
+            } else {
+                item.style.transform = 'translateX(50px)';
+            }
+            observer.observe(item);
+        });
+    });
+</script>
+{% endblock %}

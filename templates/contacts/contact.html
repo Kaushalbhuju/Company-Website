@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}  <!-- This line is crucial -->
+
+{% block content %}
+<!-- Contact Form -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Contact Us</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}  <!-- This will use the correct template -->
+                    <button type="submit" class="btn btn-primary mt-3">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
